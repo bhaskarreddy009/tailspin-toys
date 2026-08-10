@@ -1,0 +1,66 @@
+---
+interface Props {
+    currentPage: number;
+    totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+function pageHref(page: number): string {
+    return page === 1 ? '/' : `/page/${page}`;
+}
+---
+
+{totalPages > 1 && (
+    <nav class="mt-10" aria-label="Game list pagination" data-testid="pagination">
+        <ul class="flex flex-wrap items-center justify-center gap-2">
+            {currentPage > 1 && (
+                <li>
+                    <a
+                        href={pageHref(currentPage - 1)}
+                        class="flex min-h-11 items-center rounded-lg px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        aria-label="Previous page"
+                        data-testid="pagination-previous"
+                    >
+                        Previous
+                    </a>
+                </li>
+            )}
+            {pages.map((page) => (
+                <li>
+                    {page === currentPage ? (
+                        <span
+                            class="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-blue-600 px-3 text-sm font-semibold text-white"
+                            aria-current="page"
+                            data-testid="pagination-current-page"
+                        >
+                            {page}
+                        </span>
+                    ) : (
+                        <a
+                            href={pageHref(page)}
+                            class="flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            aria-label={`Page ${page}`}
+                            data-testid={`pagination-page-${page}`}
+                        >
+                            {page}
+                        </a>
+                    )}
+                </li>
+            ))}
+            {currentPage < totalPages && (
+                <li>
+                    <a
+                        href={pageHref(currentPage + 1)}
+                        class="flex min-h-11 items-center rounded-lg px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        aria-label="Next page"
+                        data-testid="pagination-next"
+                    >
+                        Next
+                    </a>
+                </li>
+            )}
+        </ul>
+    </nav>
+)}

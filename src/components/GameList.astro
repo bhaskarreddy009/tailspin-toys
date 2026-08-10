@@ -1,0 +1,29 @@
+---
+import type { Game } from '../types/game';
+import EmptyState from './EmptyState.astro';
+import GameCard from './GameCard.astro';
+import Pagination from './Pagination.astro';
+
+interface Props {
+    games: Game[];
+    currentPage: number;
+    totalPages: number;
+}
+
+const { games, currentPage, totalPages } = Astro.props;
+---
+
+<div>
+    <h2 class="mb-6 text-2xl font-medium text-slate-100">Featured Games</h2>
+
+    {games.length === 0 ? (
+        <EmptyState text="No games available at the moment." />
+    ) : (
+        <>
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3" data-testid="games-grid">
+                {games.map((game) => <GameCard game={game} />)}
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} />
+        </>
+    )}
+</div>
